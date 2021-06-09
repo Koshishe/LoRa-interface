@@ -6,7 +6,6 @@ export default {
 
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
-
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - lora-interface',
@@ -30,7 +29,19 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    '@/plugins/api',
   ],
+
+  axios: {
+    baseURL: 'https://157.230.108.67:8080',
+    proxy: true,
+  },
+
+  proxy: {
+    '/api/v1/': 'https://157.230.108.67:8080',
+    changeOrigin: true,
+    secure: false,
+  },
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -43,6 +54,8 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/proxy',
   ],
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
