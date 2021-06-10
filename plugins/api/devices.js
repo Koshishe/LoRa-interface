@@ -5,8 +5,9 @@ export default ($axios, tag) => ({
     })
       .then(({ data }) => data);
   },
-  setDevice() {
-    return $axios.post(tag)
-      .then(({ data }) => data);
+  setDevice(params) {
+    return $axios.get(`${tag}`, params)
+      .then(({ data }) => data || [])
+      .catch(() => []);
   },
 });

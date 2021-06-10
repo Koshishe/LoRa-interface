@@ -23,7 +23,7 @@
         elevation="2"
       >
         <v-card-title>Добавить устройство</v-card-title>
-        <v-form v-model="valid">
+        <v-form>
           <v-container>
             <v-text-field
               v-model="deviceName"
@@ -170,8 +170,7 @@
             <v-btn
               class="mr-4"
               type="submit"
-              :disabled="invalid"
-              @click="submit"
+              @click.prevent="submit"
             >
               submit
             </v-btn>
@@ -223,6 +222,7 @@ export default {
       model: '',
       frameCounterCheck: false,
       devAddrCheck: false,
+      deviceResult: [],
     }
   },
   computed: {
@@ -248,9 +248,19 @@ export default {
     },
   },
   methods: {
-    ...mapActions('devices', ['getDevicesList']),
-    submit () {
-        this.$v.$touch()
+    submit (params) {
+        this.$v.$touch();
+        this.setDevice(params);
+    },
+    setDevice(params) {
+      if (!params) {
+        return;
+      }
+
+      this.$api.devices.setDevice(params)
+        .then((params) => {
+          this.deviceResult = params;
+        });
     },
     clear () {
         this.$v.$reset();

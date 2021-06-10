@@ -34,13 +34,12 @@ export default {
 
   axios: {
     baseURL: 'https://157.230.108.67:8080',
-    proxy: true,
+    proxy: true
   },
-
   proxy: {
-    '/api/v1/': 'https://157.230.108.67:8080',
-    changeOrigin: true,
-    secure: false,
+    '/api/v1/': {
+      target: 'https://157.230.108.67:8080',
+    },
   },
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -55,7 +54,6 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
-    '@nuxtjs/proxy',
   ],
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
