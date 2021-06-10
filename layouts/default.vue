@@ -3,6 +3,8 @@
     <v-navigation-drawer
       :mini-variant="miniVariant"
       :clipped="clipped"
+      :width="drawerWidth"
+      v-model="drawer"
       fixed
       app
     >
@@ -28,6 +30,7 @@
       fixed
       app
     >
+      <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
       <v-toolbar-title v-text="title" />
       <v-spacer />
     </v-app-bar>
@@ -50,13 +53,13 @@ export default {
   data () {
     return {
       clipped: false,
-      drawer: false,
       fixed: false,
+      drawer: (this.$vuetify.breakpoint.name !== 'sm' && this.$vuetify.breakpoint.name !== 'xs' && this.$vuetify.breakpoint.name !== 'md'),
       items: [
         {
-          icon: 'mdi-apps',
-          title: 'Welcome',
-          to: '/'
+          icon: 'mdi-server-network',
+          title: 'Устройства',
+          to: '/devices'
         },
         {
           icon: 'mdi-chart-bubble',
@@ -69,6 +72,17 @@ export default {
       rightDrawer: false,
       title: 'LoRa Interface'
     }
-  }
+  },
+  computed: {
+    drawerWidth() {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs': return '100%';
+        case 'sm': return '50%';
+        case 'md': return '30%';
+        case 'lg': return '25%';
+        case 'xl': return '20%';
+      }
+    },
+  },
 }
 </script>
