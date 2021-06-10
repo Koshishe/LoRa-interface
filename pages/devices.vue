@@ -29,6 +29,7 @@
               v-model="deviceName"
               @input="$v.deviceName.$touch()"
               @blur="$v.deviceName.$touch()"
+              :error-messages="deviceNameErrors"
               label="Name*"
               :counter="16"
               required
@@ -143,8 +144,9 @@
               >
                 <v-checkbox
                   v-model="frameCounterCheck"
-                  :error-messages="errors"
-                  value="1"
+                  :error-messages="frameCounterCheckErrors"
+                  @change="$v.frameCounterCheck.$touch()"
+                  @blur="$v.frameCounterCheck.$touch()"
                   label="Frame Counter"
                   type="checkbox"
                   required
@@ -156,8 +158,9 @@
               >
                 <v-checkbox
                   v-model="devAddrCheck"
-                  :error-messages="errors"
-                  value="1"
+                  :error-messages="devAddrCheckErrors"
+                  @change="$v.devAddrCheck.$touch()"
+                  @blur="$v.devAddrCheck.$touch()"
                   label="Dev Address"
                   type="checkbox"
                   required
@@ -168,6 +171,7 @@
               class="mr-4"
               type="submit"
               :disabled="invalid"
+              @click="submit"
             >
               submit
             </v-btn>
@@ -223,9 +227,38 @@ export default {
   },
   computed: {
     ...mapState('devices', ['devicesList']),
+    devAddrCheckErrors () {
+        const errors = [];
+        if (!this.$v.devAddrCheck.$dirty) return errors;
+        !this.$v.devAddrCheck.checked && errors.push('You must agree to continue!');
+        return errors
+    },
+    frameCounterCheckErrors () {
+        const errors = [];
+        if (!this.$v.frameCounterCheck.$dirty) return errors;
+        !this.$v.frameCounterCheck.checked && errors.push('You must agree to continue!');
+        return errors
+    },
+    deviceNameErrors () {
+        const errors = [];
+        if (!this.$v.deviceName.$dirty) return errors;
+        !this.$v.deviceName.maxLength && errors.push('Name must be at most 16 characters long');
+        !this.$v.deviceName.required && errors.push('Name is required.');
+        return errors
+    },
   },
   methods: {
     ...mapActions('devices', ['getDevicesList']),
+    submit () {
+        this.$v.$touch()
+    },
+    clear () {
+        this.$v.$reset();
+        this.name = '';
+        this.email = '';
+        this.select = null;
+        this.checkbox = false;
+    },
   },
 }
 </script>
