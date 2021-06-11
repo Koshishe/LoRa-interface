@@ -6,7 +6,7 @@ export default ($axios, tag) => ({
       .then(({ data }) => data);
   },
   setDevice(params) {
-    return $axios.get(`${tag}`, params)
+    return $axios.post(`${tag}`, params)
       .then(({ data }) => data || [])
       .catch(() => []);
   },
