@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center" align="flex-start">
     <v-col cols="12" sm="8" md="6">
-      <v-card class="mb-6 pa-6">
+      <v-card class="mb-6 pl-6 pr-6 pb-6">
         <v-card-title>Список всех устройств</v-card-title>
         <v-card class="mb-6">
           <v-form>
@@ -38,6 +38,7 @@
     <v-col cols="12" sm="8" md="6">
       <v-card
         elevation="2"
+        class="pl-6 pr-6 pb-6"
       >
         <v-card-title>Добавить устройство</v-card-title>
         <v-form>
