@@ -43,24 +43,19 @@ export default {
       "secure": false
     },
   },
+  router: {
+    middleware: ['auth']
+  },
   auth: {
     redirect: {
       login: '/login',
       callback: false,
       home: false,
     },
-    cookie: {
-      options: {
-        domain: process.env.NODE_ENV === 'production' ? 'https://lorawandev.sulimak.com:8080' : 'localhost',
-      },
-    },
     strategies: {
       local: {
-        scheme: 'refresh',
         token: {
-          property: 'token',
-          maxAge: 300,
-          name: 'X-Authorization',
+          property: 'data.token',
         },
         user: {
           property: 'success',

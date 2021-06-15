@@ -290,6 +290,7 @@ import { required, maxLength } from 'vuelidate/lib/validators'
 export default {
   auth: true,
   mixins: [validationMixin],
+  middleware: 'auth',
   validations: {
     form: {
       devAddr: {required},

@@ -31,6 +31,8 @@
 <script>
 export default {
   layout: 'guest',
+  middleware: 'auth',
+  auth: false,
   data() {
     return {
       login: {
@@ -43,7 +45,7 @@ export default {
     async userLogin() {
       try {
         let response = await this.$auth.loginWith('local', { data: this.login });
-        console.log(this.$auth.user);
+        console.log(this.$auth.loggedIn);
         this.$router.push('/devices');
       } catch (err) {
         console.log(err);
