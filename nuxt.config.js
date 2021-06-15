@@ -34,12 +34,43 @@ export default {
   ],
 
   axios: {
-    baseURL: 'https://157.230.108.67:8080',
+    baseURL: 'https://lorawandev.sulimak.com:8080',
     proxy: true
   },
   proxy: {
     '/api/v1/': {
-      target: 'https://157.230.108.67:8080',
+      target: 'https://lorawandev.sulimak.com:8080',
+      "secure": false
+    },
+  },
+  auth: {
+    redirect: {
+      login: '/login',
+      callback: false,
+      home: false,
+    },
+    cookie: {
+      options: {
+        domain: process.env.NODE_ENV === 'production' ? 'https://lorawandev.sulimak.com:8080' : 'localhost',
+      },
+    },
+    strategies: {
+      local: {
+        scheme: 'refresh',
+        token: {
+          property: 'token',
+          maxAge: 300,
+          name: 'X-Authorization',
+        },
+        user: {
+          property: 'success',
+        },
+        endpoints: {
+          login: { url: '/api/v1/login', method: 'post' },
+          user: { url: '/api/v1/users', method: 'get' },
+          logout: false,
+        },
+      },
     },
   },
 
@@ -55,6 +86,7 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
+    '@nuxtjs/auth-next',
   ],
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -75,6 +107,21 @@ export default {
       }
     }
   },
+  redirect: [
+    {
+      from: '^[\\w\\.\\/]*(?<!\\/)(\\?.*\\=.*)*$',
+      to: (from, req) => {
+        const matches = req.url.match(/^.*(\?.*)$/);
+
+        if (matches) {
+          return `${matches[0].replace(matches[1], '')}/${matches[1]}`;
+        }
+
+        return `${req.url}/`;
+      },
+      statusCode: 301,
+    },
+  ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {

@@ -1,0 +1,34 @@
+{
+  "devices": {
+    "success": true,
+    "data": [
+      {
+        "devEUI": "3739343561375A14",
+        "name": "device_name",
+        "description": "some description",
+        "serviceProfileID": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "deviceProfileID": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        "devAddr": "01020304",
+        "nwkSKey": "8UpOYq0hqqDs8zNAWeeJR9w",
+        "fNwkSIntKey": "8UpOYq0hqqDs8zNAWeeJR9w",
+        "sNwkSIntKey": "8UpOYq0hqqDs8zNAWeeJR9w",
+        "nwkSEncKey": "8UpOYq0hqqDs8zNAWeeJR9w",
+        "appSKey": "8UpOYq0hqqDs8zNAWeeJR9e",
+        "appEUI": "8UpOYq0hqqDs8zNAWeeJR9r",
+        "appKey": "8UpOYq0hqqDs8zNAWeeJR9t",
+        "nwkKey": "8UpOYq0hqqDs8zNAWeeJR9t",
+        "frameCounterCheck": true,
+        "devAddrCheck": true,
+        "model": 0,
+        "createdAt": "2021-06-15T07:44:25.552Z",
+        "updatedAt": "2021-06-15T07:44:25.552Z"
+      }
+    ]
+  },
+  "setDevice": {
+    "success": true,
+    "data": {
+      "devEUI": "3739343561375A16"
+    }
+  }
+}

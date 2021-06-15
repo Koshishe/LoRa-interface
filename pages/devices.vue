@@ -1,5 +1,5 @@
 <template>
-  <v-row justify="center" align="flex-start">
+  <v-row justify="center">
     <v-col cols="12" sm="8" md="6">
       <v-card class="mb-6 pl-6 pr-6 pb-6">
         <v-card-title>Список всех устройств</v-card-title>
@@ -35,6 +35,7 @@
         <!-- -->
       </v-card>
     </v-col>
+    <!-- Форма добавления -->
     <v-col cols="12" sm="8" md="6">
       <v-card
         elevation="2"
@@ -287,6 +288,7 @@ import { validationMixin } from 'vuelidate'
 import { required, maxLength } from 'vuelidate/lib/validators'
 
 export default {
+  auth: true,
   mixins: [validationMixin],
   validations: {
     form: {
@@ -339,13 +341,14 @@ export default {
         devAddrCheck: false,
         deviceResult: [],
       },
+      devEuiSearch: '',
       skip: 0,
       offset: 5,
     }
   },
   computed: {
     deviceList() {
-    const params = {
+      const params = {
         'skip': this.skip,
         'offset': this.offset
       };
@@ -471,10 +474,27 @@ export default {
     },
     clear () {
       this.$v.$reset();
-      this.name = '';
-      this.email = '';
-      this.select = null;
-      this.checkbox = false;
+      this.form.devEUI = '';
+      this.form.deviceName = '';
+      this.form.deviceDescription = '';
+      this.form.serviceProfileID = '';
+      this.form.deviceProfileID = '';
+      this.form.devAddr = '';
+      this.form.nwkSKey = '';
+      this.form.fNwkSIntKey = '';
+      this.form.sNwkSIntKey = '';
+      this.form.nwkSEncKey = '';
+      this.form.appSKey = '';
+      this.form.appEUI = '';
+      this.form.appKey = '';
+      this.form.nwkKey = '';
+      this.form.model = '';
+      this.form.frameCounterCheck = '';
+      this.form.devAddrCheck = '';
+      this.form.deviceResult = '';
+    },
+    searchDevice() {
+      //
     },
   },
 }
