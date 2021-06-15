@@ -16,6 +16,7 @@
                 required
               ></v-text-field>
               <v-btn
+                color="primary"
                 class="mr-4"
                 type="submit"
               >

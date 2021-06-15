@@ -3,22 +3,25 @@
     <v-col cols="12" sm="8" md="6">
       <v-card class="mb-6 pl-6 pr-6 pb-6">
         <v-card-title>Список всех устройств</v-card-title>
-        <v-card class="mb-6">
+        <v-card class="mb-6 pa-4">
           <v-form>
             <v-container>
               <v-text-field
+                dense
+                outlined
                 v-model="devEuiSearch"
                 label="dev_eui"
                 :counter="16"
                 required
               ></v-text-field>
               <v-btn
-                class="mr-4"
-                type="submit"
-                @click.prevent="searchDevice"
-              >
-                Найти
-              </v-btn>
+              color="primary"
+              class="mr-4"
+              type="submit"
+              @click.prevent="searchDevice"
+            >
+              Найти
+            </v-btn>
             </v-container>
           </v-form>
         </v-card>
@@ -45,6 +48,7 @@
         <v-form>
           <v-container>
             <v-text-field
+              outlined
               v-model="form.deviceName"
               @input="$v.form.deviceName.$touch()"
               @blur="$v.form.deviceName.$touch()"
@@ -54,6 +58,7 @@
               required
             ></v-text-field>
             <v-text-field
+              outlined
               v-model="form.deviceDescription"
               label="Description"
             ></v-text-field>
@@ -63,6 +68,7 @@
                 md="6"
               >
                 <v-text-field
+                  outlined
                   v-model="form.devEUI"
                   @input="$v.form.devEUI.$touch()"
                   @blur="$v.form.devEUI.$touch()"
@@ -77,6 +83,7 @@
                 md="6"
               >
                 <v-text-field
+                  outlined
                   v-model="form.devAddr"
                   @input="$v.form.devAddr.$touch()"
                   @blur="$v.form.devAddr.$touch()"
@@ -93,6 +100,7 @@
                 md="6"
               >
                 <v-text-field
+                  outlined
                   v-model="form.serviceProfileID"
                   @input="$v.form.serviceProfileID.$touch()"
                   @blur="$v.form.serviceProfileID.$touch()"
@@ -107,6 +115,7 @@
                 md="6"
               >
                 <v-text-field
+                  outlined
                   v-model="form.deviceProfileID"
                   @input="$v.form.deviceProfileID.$touch()"
                   @blur="$v.form.deviceProfileID.$touch()"
@@ -123,6 +132,7 @@
                 md="6"
               >
                 <v-text-field
+                  outlined
                   v-model="form.nwkSKey"
                   @input="$v.form.nwkSKey.$touch()"
                   @blur="$v.form.nwkSKey.$touch()"
@@ -137,6 +147,7 @@
                 md="6"
               >
                 <v-text-field
+                  outlined
                   v-model="form.fNwkSIntKey"
                   @input="$v.form.fNwkSIntKey.$touch()"
                   @blur="$v.form.fNwkSIntKey.$touch()"
@@ -153,6 +164,7 @@
                 md="6"
               >
                 <v-text-field
+                  outlined
                   v-model="form.sNwkSIntKey"
                   @input="$v.form.sNwkSIntKey.$touch()"
                   @blur="$v.form.sNwkSIntKey.$touch()"
@@ -167,6 +179,7 @@
                 md="6"
               >
                 <v-text-field
+                  outlined
                   v-model="form.nwkSEncKey"
                   @input="$v.form.nwkSEncKey.$touch()"
                   @blur="$v.form.nwkSEncKey.$touch()"
@@ -183,6 +196,7 @@
                 md="6"
               >
                 <v-text-field
+                  outlined
                   v-model="form.appSKey"
                   @input="$v.form.appSKey.$touch()"
                   @blur="$v.form.appSKey.$touch()"
@@ -197,6 +211,7 @@
                 md="6"
               >
                 <v-text-field
+                  outlined
                   v-model="form.appEUI"
                   @input="$v.form.appEUI.$touch()"
                   @blur="$v.form.appEUI.$touch()"
@@ -213,6 +228,7 @@
                 md="6"
               >
                 <v-text-field
+                  outlined
                   v-model="form.appKey"
                   @input="$v.form.appKey.$touch()"
                   @blur="$v.form.appKey.$touch()"
@@ -227,6 +243,7 @@
                 md="6"
               >
                 <v-text-field
+                  outlined
                   v-model="form.model"
                   @input="$v.form.model.$touch()"
                   @blur="$v.form.model.$touch()"
@@ -267,15 +284,17 @@
               </v-col>
             </v-row>
             <v-btn
+              color="primary"
               class="mr-4"
               type="submit"
               @click.prevent="submit"
             >
-              submit
+              Добавить
             </v-btn>
             <v-btn @click="clear">
-              clear
+              Очистить
             </v-btn>
+            <div>{{ deviceResult }}</div>
           </v-container>
         </v-form>
       </v-card>
@@ -285,7 +304,7 @@
 
 <script>
 import { validationMixin } from 'vuelidate'
-import { required, maxLength } from 'vuelidate/lib/validators'
+import { required, maxLength, integer } from 'vuelidate/lib/validators'
 
 export default {
   auth: true,
@@ -301,7 +320,10 @@ export default {
       appSKey: {required},
       appEUI: {required},
       nwkKey: {required},
-      model: {required},
+      model: {
+        required,
+        integer,
+      },
       deviceName: {required, maxLength: maxLength(16)},
       serviceProfileID: {required},
       deviceProfileID: {required},
@@ -337,11 +359,11 @@ export default {
         appEUI: "8UpOYq0hqqDs8zNAWeeJR9r",
         appKey: '8UpOYq0hqqDs8zNAWeeJR9e',
         nwkKey: "8UpOYq0hqqDs8zNAWeeJR9t",
-        model: '0',
+        model: 12,
         frameCounterCheck: false,
         devAddrCheck: false,
-        deviceResult: [],
       },
+      deviceResult: null,
       devEuiSearch: '',
       skip: 0,
       offset: 5,
@@ -431,6 +453,7 @@ export default {
       const errors = [];
       if (!this.$v.form.model.$dirty) return errors;
       !this.$v.form.model.required && errors.push('This field is required.');
+      console.log(this.form.model);
       return errors
     },
     frameCounterCheckErrors() {
@@ -459,8 +482,12 @@ export default {
       }
 
       this.$api.devices.setDevice(params)
-        .then((params) => {
-          this.deviceResult = params;
+        .then((result) => {
+          this.deviceResult = result;
+        })
+        .catch((result) => {
+            console.log(result);
+          this.deviceResult = result;
         });
     },
     getDevicesList(params){
@@ -489,7 +516,7 @@ export default {
       this.form.appEUI = '';
       this.form.appKey = '';
       this.form.nwkKey = '';
-      this.form.model = '';
+      this.form.model = null;
       this.form.frameCounterCheck = '';
       this.form.devAddrCheck = '';
       this.form.deviceResult = '';
