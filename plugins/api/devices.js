@@ -5,6 +5,6 @@ export default ($axios, tag) => ({
     });
   },
   setDevice(params) {
-    return $axios.post(`${tag}`, params);
+    return $axios.post(tag, params);
   },
 });

@@ -49,9 +49,9 @@
           <v-container>
             <v-text-field
               outlined
-              v-model="form.deviceName"
-              @input="$v.form.deviceName.$touch()"
-              @blur="$v.form.deviceName.$touch()"
+              v-model="form.name"
+              @input="$v.form.name.$touch()"
+              @blur="$v.form.name.$touch()"
               :error-messages="deviceNameErrors"
               label="Name*"
               :counter="16"
@@ -59,7 +59,7 @@
             ></v-text-field>
             <v-text-field
               outlined
-              v-model="form.deviceDescription"
+              v-model="form.description"
               label="Description"
             ></v-text-field>
             <v-row>
@@ -99,34 +99,23 @@
                 cols="12"
                 md="6"
               >
-                <v-autocomplete
-                  v-model="serviceProfileID"
-                  :loading="loading"
-                  :items="items"
-                  :search-input.sync="search"
-                  cache-items
-                  class="mx-4"
-                  flat
-                  hide-no-data
-                  hide-details
-                  label="Service Profile ID*"
-                  solo-inverted
-                ></v-autocomplete>
+                <v-select
+                  v-model="form.serviceProfileID"
+                  :items="serviceProfileIDList"
+                  label="serviceProfileID*"
+                  outlined
+                ></v-select>
               </v-col>
               <v-col
                 cols="12"
                 md="6"
               >
-                <v-text-field
-                  outlined
+                <v-select
                   v-model="form.deviceProfileID"
-                  @input="$v.form.deviceProfileID.$touch()"
-                  @blur="$v.form.deviceProfileID.$touch()"
-                  :error-messages="deviceProfileIDErrors"
-                  :counter="36"
-                  label="Device Profile ID*"
-                  required
-                ></v-text-field>
+                  :items="deviceProfileIDList"
+                  label="deviceProfileID*"
+                  outlined
+                ></v-select>
               </v-col>
             </v-row>
             <v-row>
@@ -297,7 +286,7 @@
             <v-btn @click="clear">
               Очистить
             </v-btn>
-            <div>{{ deviceResult }}</div>
+            <div class="mt-3 red--text text--darken-4">{{ deviceResult }}</div>
           </v-container>
         </v-form>
       </v-card>
@@ -307,6 +296,7 @@
 
 <script>
 import { validationMixin } from 'vuelidate'
+import { mapState, mapActions } from "vuex";
 import { required, maxLength, integer } from 'vuelidate/lib/validators'
 
 export default {
@@ -327,8 +317,7 @@ export default {
         required,
         integer,
       },
-      deviceName: {required, maxLength: maxLength(16)},
-      deviceProfileID: {required},
+      name: {required, maxLength: maxLength(16)},
       appKey: {required},
       devEUI: {required},
       frameCounterCheck: {
@@ -346,15 +335,12 @@ export default {
   data() {
     return {
       addDeviceStatus: null,
-      loading: false,
-      search: null,
-      serviceProfileID: null,
-      items: [],
       form: {
         devEUI: '3739343561375A14',
-        deviceName: 'device_name',
-        deviceDescription: 'some description',
-        deviceProfileID: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+        name: 'device_name',
+        description: 'some description',
+        serviceProfileID: '',
+        deviceProfileID: '',
         devAddr: '01020304',
         nwkSKey: '8UpOYq0hqqDs8zNAWeeJR9w',
         fNwkSIntKey: '8UpOYq0hqqDs8zNAWeeJR9w',
@@ -374,20 +360,21 @@ export default {
       offset: 5,
     }
   },
+  async fetch() {
+    await this.getServiceProfileId();
+    await this.getDeviceProfileId();
+  },
   computed: {
+    ...mapState('service-profile', ['serviceProfileIDList', 'deviceProfileIDList']),
     deviceList() {
       const params = {
         'skip': this.skip,
         'offset': this.offset
       };
-      return this.getDevicesList(params);
-    },
-    serviceProfileIDList() {
-      const params = {
-        'skip': this.skip,
-        'offset': this.offset
-      };
-      return this.getServiceProfilesList(params);
+      this.$api.devices.getDevicesList(params)
+        .then((result) => {
+          return result.data.data;
+        });
     },
     devAddrCheckErrors() {
       const errors = [];
@@ -405,12 +392,6 @@ export default {
       const errors = [];
       if (!this.$v.form.devAddr.$dirty) return errors;
       !this.$v.form.devAddr.required && errors.push('This field is required.');
-      return errors
-    },
-    deviceProfileIDErrors() {
-      const errors = [];
-      if (!this.$v.form.deviceProfileID.$dirty) return errors;
-      !this.$v.form.deviceProfileID.required && errors.push('This field is required.');
       return errors
     },
     nwkSKeyErrors() {
@@ -459,7 +440,6 @@ export default {
       const errors = [];
       if (!this.$v.form.model.$dirty) return errors;
       !this.$v.form.model.required && errors.push('This field is required.');
-      console.log(this.form.model);
       return errors
     },
     frameCounterCheckErrors() {
@@ -470,27 +450,13 @@ export default {
     },
     deviceNameErrors() {
       const errors = [];
-      if (!this.$v.form.deviceName.$dirty) return errors;
-      !this.$v.form.deviceName.required && errors.push('Name is required.');
+      if (!this.$v.form.name.$dirty) return errors;
+      !this.$v.form.name.required && errors.push('Name is required.');
       return errors
     },
   },
-  watch: {
-    search (val) {
-      val && val !== this.items && this.querySelections(val)
-    },
-  },
   methods: {
-    querySelections (v) {
-      this.loading = true;
-      // Simulated ajax query
-      setTimeout(() => {
-        this.items = this.serviceProfileIDList.filter(e => {
-          return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
-        });
-        this.loading = false;
-      }, 500);
-    },
+    ...mapActions('service-profile', ['getServiceProfileId', 'getDeviceProfileId']),
     submit () {
       this.$v.$touch();
       if (!this.$v.$invalid) {
@@ -507,28 +473,7 @@ export default {
           this.deviceResult = result;
         })
         .catch((result) => {
-            console.log(result);
           this.deviceResult = result;
-        });
-    },
-    getDevicesList(params){
-      if (!params) {
-        return;
-      }
-
-      this.$api.devices.getDevicesList(params)
-        .then((result) => {
-          return result;
-        });
-    },
-    getServiceProfilesList(params){
-      if (!params) {
-        return;
-      }
-
-      this.$api.serviceProfiles.getServiceProfilesList(params)
-        .then((result) => {
-          return result;
         });
     },
     clear () {
@@ -549,10 +494,7 @@ export default {
       this.form.model = null;
       this.form.frameCounterCheck = '';
       this.form.devAddrCheck = '';
-      this.form.deviceResult = '';
-    },
-    searchDevice() {
-      //
+      this.deviceResult = '';
     },
   },
 }

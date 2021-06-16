@@ -4,4 +4,9 @@ export default ($axios, tag) => ({
       params,
     });
   },
+  getDeviceProfilesList(params) {
+    return $axios.get(tag, {
+      params,
+    });
+  },
 });

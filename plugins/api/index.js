@@ -6,6 +6,7 @@ export default ({ $axios }, inject) => {
 
   inject('api', {
     devices: apiDevices($axios, `${prefix}devices`),
-    serviceProfiles: apiServicesProfile($axios, `${prefix}service_profiles`)
+    serviceProfiles: apiServicesProfile($axios, `${prefix}service_profiles`),
+    deviceProfiles: apiServicesProfile($axios, `${prefix}device_profiles`)
   });
 };
