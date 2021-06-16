@@ -17,7 +17,10 @@
         ></v-text-field>
       </v-col>
     </v-row>
-    <v-btn @click.prevent="disabled = !disabled">{{ disabled ? 'Edit' : 'Done'}}</v-btn>
+    <v-row class="d-flex mb-4 mx-1">
+      <v-btn @click.prevent="disabled = !disabled">{{ disabled ? 'Редактировать' : 'Готово'}}</v-btn>
+      <v-btn class="ml-3" color="error">Удалить</v-btn>
+    </v-row>
   </v-form>
 </template>
 

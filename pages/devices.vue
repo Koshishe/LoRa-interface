@@ -26,7 +26,6 @@
           </v-form>
         </v-card>
         <!-- список устройтв -->
-        <div>{{ devicesList[0] }}</div>
         <v-expansion-panels focusable>
           <v-expansion-panel
             v-for="item in devicesList"
@@ -363,8 +362,8 @@ export default {
         appKey: '8UpOYq0hqqDs8zNAWeeJR9e',
         nwkKey: "8UpOYq0hqqDs8zNAWeeJR9t",
         model: 12,
-        frameCounterCheck: false,
-        devAddrCheck: false,
+        frameCounterCheck: true,
+        devAddrCheck: true,
       },
       deviceResult: null,
       deviceError: false,
