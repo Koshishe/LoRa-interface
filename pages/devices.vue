@@ -99,16 +99,19 @@
                 cols="12"
                 md="6"
               >
-                <v-text-field
-                  outlined
-                  v-model="form.serviceProfileID"
-                  @input="$v.form.serviceProfileID.$touch()"
-                  @blur="$v.form.serviceProfileID.$touch()"
-                  :error-messages="serviceProfileIDErrors"
-                  :counter="36"
+                <v-autocomplete
+                  v-model="serviceProfileID"
+                  :loading="loading"
+                  :items="items"
+                  :search-input.sync="search"
+                  cache-items
+                  class="mx-4"
+                  flat
+                  hide-no-data
+                  hide-details
                   label="Service Profile ID*"
-                  required
-                ></v-text-field>
+                  solo-inverted
+                ></v-autocomplete>
               </v-col>
               <v-col
                 cols="12"
@@ -325,7 +328,6 @@ export default {
         integer,
       },
       deviceName: {required, maxLength: maxLength(16)},
-      serviceProfileID: {required},
       deviceProfileID: {required},
       appKey: {required},
       devEUI: {required},
@@ -344,11 +346,14 @@ export default {
   data() {
     return {
       addDeviceStatus: null,
+      loading: false,
+      search: null,
+      serviceProfileID: null,
+      items: [],
       form: {
         devEUI: '3739343561375A14',
         deviceName: 'device_name',
         deviceDescription: 'some description',
-        serviceProfileID: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
         deviceProfileID: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
         devAddr: '01020304',
         nwkSKey: '8UpOYq0hqqDs8zNAWeeJR9w',
@@ -377,6 +382,13 @@ export default {
       };
       return this.getDevicesList(params);
     },
+    serviceProfileIDList() {
+      const params = {
+        'skip': this.skip,
+        'offset': this.offset
+      };
+      return this.getServiceProfilesList(params);
+    },
     devAddrCheckErrors() {
       const errors = [];
       if (!this.$v.form.devAddrCheck.$dirty) return errors;
@@ -393,12 +405,6 @@ export default {
       const errors = [];
       if (!this.$v.form.devAddr.$dirty) return errors;
       !this.$v.form.devAddr.required && errors.push('This field is required.');
-      return errors
-    },
-    serviceProfileIDErrors() {
-      const errors = [];
-      if (!this.$v.form.serviceProfileID.$dirty) return errors;
-      !this.$v.form.serviceProfileID.required && errors.push('This field is required.');
       return errors
     },
     deviceProfileIDErrors() {
@@ -469,7 +475,22 @@ export default {
       return errors
     },
   },
+  watch: {
+    search (val) {
+      val && val !== this.items && this.querySelections(val)
+    },
+  },
   methods: {
+    querySelections (v) {
+      this.loading = true;
+      // Simulated ajax query
+      setTimeout(() => {
+        this.items = this.serviceProfileIDList.filter(e => {
+          return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
+        });
+        this.loading = false;
+      }, 500);
+    },
     submit () {
       this.$v.$touch();
       if (!this.$v.$invalid) {
@@ -500,12 +521,21 @@ export default {
           return result;
         });
     },
+    getServiceProfilesList(params){
+      if (!params) {
+        return;
+      }
+
+      this.$api.serviceProfiles.getServiceProfilesList(params)
+        .then((result) => {
+          return result;
+        });
+    },
     clear () {
       this.$v.$reset();
       this.form.devEUI = '';
       this.form.deviceName = '';
       this.form.deviceDescription = '';
-      this.form.serviceProfileID = '';
       this.form.deviceProfileID = '';
       this.form.devAddr = '';
       this.form.nwkSKey = '';

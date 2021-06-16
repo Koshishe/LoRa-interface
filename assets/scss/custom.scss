@@ -3,5 +3,10 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active  {
   background-color: transparent!important;
-  color: inherit !important;
+  color: #fff !important;
+  -webkit-box-shadow: 0 0 0 30px #1e1e1e inset !important;
+}
+
+input:-internal-autofill-selected {
+  appearance: none;
 }
