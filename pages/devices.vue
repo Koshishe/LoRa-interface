@@ -26,12 +26,15 @@
           </v-form>
         </v-card>
         <!-- список устройтв -->
-        <div>{{ deviceList }}</div>
+        <div>{{ devicesList[0] }}</div>
         <v-expansion-panels focusable>
-          <v-expansion-panel>
-            <v-expansion-panel-header>Item</v-expansion-panel-header>
+          <v-expansion-panel
+            v-for="item in devicesList"
+            :key="item.devEUI"
+          >
+            <v-expansion-panel-header>{{ item.name }}</v-expansion-panel-header>
             <v-expansion-panel-content>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                <DeviceItem :item="filteredDevice(item)"></DeviceItem>
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
@@ -286,7 +289,12 @@
             <v-btn @click="clear">
               Очистить
             </v-btn>
-            <div class="mt-3 red--text text--darken-4">{{ deviceResult }}</div>
+            <div
+              class="mt-3"
+              :class="[{ 'red--text text--darken-4': deviceError }, { 'light-green--text text--darken-3': deviceSuccess }]"
+            >
+              {{ deviceResult }}
+            </div>
           </v-container>
         </v-form>
       </v-card>
@@ -296,6 +304,7 @@
 
 <script>
 import { validationMixin } from 'vuelidate'
+import DeviceItem from '~/components/DeviceItem.vue'
 import { mapState, mapActions } from "vuex";
 import { required, maxLength, integer } from 'vuelidate/lib/validators'
 
@@ -332,6 +341,9 @@ export default {
       },
     }
   },
+  components: {
+    DeviceItem,
+  },
   data() {
     return {
       addDeviceStatus: null,
@@ -347,7 +359,7 @@ export default {
         sNwkSIntKey: "8UpOYq0hqqDs8zNAWeeJR9w",
         nwkSEncKey: "8UpOYq0hqqDs8zNAWeeJR9w",
         appSKey: "8UpOYq0hqqDs8zNAWeeJR9e",
-        appEUI: "8UpOYq0hqqDs8zNAWeeJR9r",
+        appEUI: "0000000001010101",
         appKey: '8UpOYq0hqqDs8zNAWeeJR9e',
         nwkKey: "8UpOYq0hqqDs8zNAWeeJR9t",
         model: 12,
@@ -355,6 +367,8 @@ export default {
         devAddrCheck: false,
       },
       deviceResult: null,
+      deviceError: false,
+      deviceSuccess: false,
       devEuiSearch: '',
       skip: 0,
       offset: 5,
@@ -363,19 +377,11 @@ export default {
   async fetch() {
     await this.getServiceProfileId();
     await this.getDeviceProfileId();
+    await this.getDevicesList();
   },
   computed: {
     ...mapState('service-profile', ['serviceProfileIDList', 'deviceProfileIDList']),
-    deviceList() {
-      const params = {
-        'skip': this.skip,
-        'offset': this.offset
-      };
-      this.$api.devices.getDevicesList(params)
-        .then((result) => {
-          return result.data.data;
-        });
-    },
+    ...mapState('devices', ['devicesList']),
     devAddrCheckErrors() {
       const errors = [];
       if (!this.$v.form.devAddrCheck.$dirty) return errors;
@@ -457,6 +463,7 @@ export default {
   },
   methods: {
     ...mapActions('service-profile', ['getServiceProfileId', 'getDeviceProfileId']),
+    ...mapActions('devices', ['getDevicesList']),
     submit () {
       this.$v.$touch();
       if (!this.$v.$invalid) {
@@ -469,12 +476,28 @@ export default {
       }
 
       this.$api.devices.setDevice(params)
-        .then((result) => {
-          this.deviceResult = result;
+        .then(() => {
+          this.deviceError= false;
+          this.deviceSuccess = true;
+          this.deviceResult = 'Device added successfully';
         })
         .catch((result) => {
+          this.deviceError= true;
+          this.deviceSuccess = false;
           this.deviceResult = result;
         });
+    },
+    filteredDevice(item) {
+      let res = [];
+      for (let key in item) {
+        if (item.hasOwnProperty(key)) {
+          res.push({
+            "name": key,
+            "prop": item[key]
+          })
+        }
+      }
+      return res;
     },
     clear () {
       this.$v.$reset();
@@ -495,6 +518,8 @@ export default {
       this.form.frameCounterCheck = '';
       this.form.devAddrCheck = '';
       this.deviceResult = '';
+      this.deviceError= false;
+      this.deviceSuccess = false;
     },
   },
 }

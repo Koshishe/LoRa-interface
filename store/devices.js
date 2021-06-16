@@ -4,7 +4,7 @@ export const state = () => ({
 
 export const mutations = {
   GET_DEVICES_LIST(state, result) {
-    state.devicesList = result;
+    state.devicesList = result.data.data;
   }
 };
 
