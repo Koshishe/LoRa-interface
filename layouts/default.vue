@@ -57,9 +57,19 @@ export default {
       drawer: (this.$vuetify.breakpoint.name !== 'sm' && this.$vuetify.breakpoint.name !== 'xs' && this.$vuetify.breakpoint.name !== 'md'),
       items: [
         {
+          icon: 'mdi-account',
+          title: 'Профиль',
+          to: '/'
+        },
+        {
           icon: 'mdi-server-network',
           title: 'Устройства',
           to: '/devices'
+        },
+        {
+          icon: 'mdi-access-point',
+          title: 'Базовые станции',
+          to: '/gateways'
         },
         {
           icon: 'mdi-chart-bubble',

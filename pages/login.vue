@@ -47,7 +47,7 @@ export default {
       try {
         let response = await this.$auth.loginWith('local', { data: this.login });
         console.log(this.$auth.loggedIn);
-        this.$router.push('/devices');
+        this.$router.push('/');
       } catch (err) {
         console.log(err);
       }
