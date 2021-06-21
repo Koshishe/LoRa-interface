@@ -3,40 +3,40 @@
     <v-col cols="12" sm="8" md="6">
       <v-card class="mb-6 pl-6 pr-6 pb-6">
         <v-card-title>Список всех устройств</v-card-title>
+        <!-- найти устройство -->
         <v-card class="mb-6 pa-4">
-          <v-form>
-            <v-container>
-              <v-text-field
-                dense
-                outlined
-                v-model="devEuiSearch"
-                label="dev_eui"
-                :counter="16"
-                required
-              ></v-text-field>
-              <v-btn
-              color="primary"
-              class="mr-4"
-              type="submit"
-              @click.prevent="searchDevice"
-            >
-              Найти
-            </v-btn>
-            </v-container>
-          </v-form>
+          <p class="font-weight-regular">
+            Введите devEUI, чтобы найти устройство
+          </p>
+          <v-text-field
+            dense
+            outlined
+            v-model="devEuiSearch"
+            label="dev_eui"
+            :counter="16"
+            required
+          ></v-text-field>
         </v-card>
         <!-- список устройтв -->
-        <v-expansion-panels focusable>
-          <v-expansion-panel
-            v-for="item in devicesList"
-            :key="item.devEUI"
-          >
-            <v-expansion-panel-header>{{ item.name }}</v-expansion-panel-header>
-            <v-expansion-panel-content>
-                <DeviceItem :item="filteredDevice(item)"></DeviceItem>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
+        <div v-if="devices.length">
+          <v-expansion-panels focusable>
+            <v-expansion-panel
+              v-for="item in devices"
+              :key="item.devEUI"
+            >
+              <v-expansion-panel-header>{{ `${item.name}: ${item.devEUI}` }}</v-expansion-panel-header>
+              <v-expansion-panel-content
+                class="device__card overflow-y-auto"
+                :class="[{'_full': showFull}]"
+              >
+                  <DeviceItem :item="item"></DeviceItem>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </div>
+        <div v-else class="grey--text text-darken-1 mb-2">
+          Не найдено ни одного устройства
+        </div>
         <!-- -->
       </v-card>
     </v-col>
@@ -371,12 +371,13 @@ export default {
       devEuiSearch: '',
       skip: 0,
       offset: 5,
+      showFull: false,
     }
   },
   async fetch() {
     await this.getServiceProfileId();
     await this.getDeviceProfileId();
-    await this.getDevicesList();
+    await this.getDevicesList({skip: 0, limit: 10});
   },
   computed: {
     ...mapState('service-profile', ['serviceProfileIDList', 'deviceProfileIDList']),
@@ -459,6 +460,9 @@ export default {
       !this.$v.form.name.required && errors.push('Name is required.');
       return errors
     },
+    devices() {
+      return (this.devEuiSearch) ? this.devicesList.filter((item) => item.devEUI.indexOf(this.devEuiSearch) !== -1) : this.devicesList;
+    },
   },
   methods: {
     ...mapActions('service-profile', ['getServiceProfileId', 'getDeviceProfileId']),
@@ -479,6 +483,7 @@ export default {
           this.deviceError= false;
           this.deviceSuccess = true;
           this.deviceResult = 'Device added successfully';
+          this.getDevicesList({skip: 0, limit: 10});
         })
         .catch((result) => {
           this.deviceError= true;
@@ -523,3 +528,22 @@ export default {
   },
 }
 </script>
+<style lang="scss">
+.device {
+  &__card {
+    height: 400px;
+
+    &._full {
+      height: auto;
+    }
+  }
+
+  &__btns {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #1e1e1e;
+  }
+}
+</style>
