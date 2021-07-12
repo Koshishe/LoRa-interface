@@ -1,43 +1,66 @@
 <template>
-  <v-app dark>
-    <v-navigation-drawer
-      :mini-variant="miniVariant"
-      :clipped="clipped"
-      :width="drawerWidth"
-      v-model="drawer"
-      fixed
-      app
-    >
-      <v-list>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-        >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-app-bar
-      :clipped-left="clipped"
-      fixed
-      app
-    >
-      <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
-      <v-toolbar-title v-text="title" />
-      <v-spacer />
-    </v-app-bar>
+  <v-app
+    class="mx-auto"
+  >
+      <v-app-bar
+        :clipped-left="clipped"
+        fixed
+        app
+        elevation="0"
+      >
+        <v-row class="justify-center">
+          <v-col
+            cols="12"
+            md="8"
+            class="d-flex align-center"
+          >
+              <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
+              <v-toolbar-title v-text="title" />
+          </v-col>
+        </v-row>
+      </v-app-bar>
     <v-main>
-      <v-container>
-        <nuxt />
-      </v-container>
+      <v-row class="justify-center">
+        <v-col
+          cols="12"
+          md="8"
+        >
+          <v-container
+            class="d-flex justify-center align-start"
+          >
+            <v-row>
+              <v-col
+                cols="6"
+                md="3"
+              >
+                <v-list>
+                  <v-list-item
+                    v-for="(item, i) in items"
+                    :key="i"
+                    :to="item.to"
+                    router
+                    exact
+                  >
+                    <v-list-item-action>
+                      <v-icon>{{ item.icon }}</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                      <v-list-item-title v-text="item.title" />
+                    </v-list-item-content>
+                  </v-list-item>
+                </v-list>
+              </v-col>
+              <v-col
+                cols="12"
+                sm="6"
+                md="9"
+              >
+                <nuxt />
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-col>
+      </v-row>
     </v-main>
     <v-footer
       :absolute="!fixed"
@@ -96,3 +119,9 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+  .v-navigation-drawer__border {
+    display: none;
+  }
+</style>

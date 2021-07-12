@@ -12,14 +12,13 @@
           :value="el"
           :label="index"
           v-model="form[index]"
-          outlined
           :disabled="(index === 'devEUI' || index === 'devAddrCheck' || index === 'frameCounterCheck') ? true : disabled"
           width="50%"
         ></v-text-field>
       </v-col>
     </v-row>
-    <div class="py-4 px-4 device__btns">
-      <v-btn @click.prevent="changeDevice">{{ disabled ? 'Редактировать' : 'Готово'}}</v-btn>
+    <div class="py-4">
+      <v-btn color="primary" @click.prevent="changeDevice">{{ disabled ? 'Редактировать' : 'Готово'}}</v-btn>
       <v-dialog
         v-model="dialog"
         persistent
@@ -36,7 +35,7 @@
             Удалить
           </v-btn>
         </template>
-        <v-card>
+        <v-card outlined>
           <v-card-title class="text-h5">
             Внимание!
           </v-card-title>

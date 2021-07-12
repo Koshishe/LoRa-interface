@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center">
     <v-col cols="12" sm="8" md="4">
-      <v-card class="mb-6 pl-6 pr-6 pb-6">
+      <v-card outlined class="mb-6 pl-6 pr-6 pb-6">
         <v-card-title>Авторизация</v-card-title>
           <v-form @submit.prevent="userLogin">
             <v-container>

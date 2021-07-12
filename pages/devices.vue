@@ -1,304 +1,324 @@
 <template>
-  <v-row justify="center">
-    <v-col cols="12" sm="8" md="6">
-      <v-card class="mb-6 pl-6 pr-6 pb-6">
-        <v-card-title>Список всех устройств</v-card-title>
-        <!-- найти устройство -->
-        <v-card class="mb-6 pa-4">
-          <p class="font-weight-regular">
-            Введите devEUI, чтобы найти устройство
-          </p>
-          <v-text-field
-            dense
-            outlined
-            v-model="devEuiSearch"
-            label="dev_eui"
-            :counter="16"
-            required
-          ></v-text-field>
-        </v-card>
-        <!-- список устройтв -->
-        <div v-if="devices.length">
-          <v-expansion-panels focusable>
-            <v-expansion-panel
-              v-for="item in devices"
-              :key="item.devEUI"
+  <div style="width: 100%;">
+    <v-card elevation="0">
+      <v-card-title class="teal lighten-1">
+        <v-row>
+          <v-col
+            cols="12"
+            md="4"
+          >
+            <span class="text-h5 white--text">Устройства</span>
+          </v-col>
+          <v-col md="6">
+            <!-- найти устройство -->
+            <v-expand-x-transition>
+              <v-text-field
+                hide-details
+                v-model="devEuiSearch"
+                label="Введите devEUI, чтобы найти устройство"
+                solo
+                class="white--text"
+                v-show="showSearch"
+              />
+            </v-expand-x-transition>
+          </v-col>
+          <v-col md="1">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  icon
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="showSearch = !showSearch"
+                >
+                  <v-icon color="white">mdi-magnify</v-icon>
+                </v-btn>
+              </template>
+              <span>Поиск по устройсвам</span>
+            </v-tooltip>
+          </v-col>
+          <v-col md="1">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  icon
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="addDeviceModal = !addDeviceModal"
+                >
+                  <v-icon color="white">mdi-plus-box-multiple</v-icon>
+                </v-btn>
+              </template>
+              <span>Добавить устройство</span>
+            </v-tooltip>
+          </v-col>
+        </v-row>
+      </v-card-title>
+      <!-- список устройтв -->
+      <div class="px-6 py-6" v-if="devices.length">
+        <v-expansion-panels focusable>
+          <v-expansion-panel
+            v-for="item in devices"
+            :key="item.devEUI"
+          >
+            <v-expansion-panel-header>{{ `${item.name}: ${item.devEUI}` }}</v-expansion-panel-header>
+            <v-expansion-panel-content
+              class="overflow-y-auto"
             >
-              <v-expansion-panel-header>{{ `${item.name}: ${item.devEUI}` }}</v-expansion-panel-header>
-              <v-expansion-panel-content
-                class="device__card overflow-y-auto"
-                :class="[{'_full': showFull}]"
-              >
-                  <DeviceItem :item="item"></DeviceItem>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
-        </div>
-        <div v-else class="grey--text text-darken-1 mb-2">
-          Не найдено ни одного устройства
-        </div>
-        <!-- -->
-      </v-card>
-    </v-col>
-    <!-- Форма добавления -->
-    <v-col cols="12" sm="8" md="6">
-      <v-card
-        elevation="2"
-        class="pl-6 pr-6 pb-6"
-      >
-        <v-card-title>Добавить устройство</v-card-title>
-        <v-form>
-          <v-container>
+                <DeviceItem :item="item"></DeviceItem>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </div>
+      <div v-else class="grey--text text-darken-1 mb-2">
+        Не найдено ни одного устройства
+      </div>
+    </v-card>
+  <v-dialog
+    v-model="addDeviceModal"
+    width="600"
+  >
+  <!-- Форма добавления -->
+    <v-card>
+      <v-card-title class="text-h5">Добавить устройство</v-card-title>
+      <v-form>
+      <v-container>
+        <v-text-field
+          v-model="form.name"
+          @input="$v.form.name.$touch()"
+          @blur="$v.form.name.$touch()"
+          :error-messages="deviceNameErrors"
+          label="Name*"
+          :counter="16"
+          required
+        ></v-text-field>
+        <v-text-field
+          v-model="form.description"
+          label="Description"
+        ></v-text-field>
+        <v-row>
+          <v-col
+            cols="12"
+            md="6"
+          >
             <v-text-field
-              outlined
-              v-model="form.name"
-              @input="$v.form.name.$touch()"
-              @blur="$v.form.name.$touch()"
-              :error-messages="deviceNameErrors"
-              label="Name*"
+              v-model="form.devEUI"
+              @input="$v.form.devEUI.$touch()"
+              @blur="$v.form.devEUI.$touch()"
+              :error-messages="devEUIErrors"
               :counter="16"
+              label="devEUI*"
               required
             ></v-text-field>
+          </v-col>
+          <v-col
+            cols="12"
+            md="6"
+          >
             <v-text-field
-              outlined
-              v-model="form.description"
-              label="Description"
+              v-model="form.devAddr"
+              @input="$v.form.devAddr.$touch()"
+              @blur="$v.form.devAddr.$touch()"
+              required
+              :error-messages="devAddrErrors"
+              :counter="8"
+              label="Dev Address"
             ></v-text-field>
-            <v-row>
-              <v-col
-                cols="12"
-                md="6"
-              >
-                <v-text-field
-                  outlined
-                  v-model="form.devEUI"
-                  @input="$v.form.devEUI.$touch()"
-                  @blur="$v.form.devEUI.$touch()"
-                  :error-messages="devEUIErrors"
-                  :counter="16"
-                  label="devEUI*"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-                md="6"
-              >
-                <v-text-field
-                  outlined
-                  v-model="form.devAddr"
-                  @input="$v.form.devAddr.$touch()"
-                  @blur="$v.form.devAddr.$touch()"
-                  required
-                  :error-messages="devAddrErrors"
-                  :counter="8"
-                  label="Dev Address"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col
-                cols="12"
-                md="6"
-              >
-                <v-select
-                  v-model="form.serviceProfileID"
-                  :items="serviceProfileIDList"
-                  label="serviceProfileID*"
-                  outlined
-                ></v-select>
-              </v-col>
-              <v-col
-                cols="12"
-                md="6"
-              >
-                <v-select
-                  v-model="form.deviceProfileID"
-                  :items="deviceProfileIDList"
-                  label="deviceProfileID*"
-                  outlined
-                ></v-select>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col
-                cols="12"
-                md="6"
-              >
-                <v-text-field
-                  outlined
-                  v-model="form.nwkSKey"
-                  @input="$v.form.nwkSKey.$touch()"
-                  @blur="$v.form.nwkSKey.$touch()"
-                  :error-messages="nwkSKeyErrors"
-                  required
-                  :counter="23"
-                  label="nwkSKey*"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-                md="6"
-              >
-                <v-text-field
-                  outlined
-                  v-model="form.fNwkSIntKey"
-                  @input="$v.form.fNwkSIntKey.$touch()"
-                  @blur="$v.form.fNwkSIntKey.$touch()"
-                  :error-messages="fNwkSIntKeyErrors"
-                  required
-                  :counter="23"
-                  label="fNwkSIntKey*"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col
-                cols="12"
-                md="6"
-              >
-                <v-text-field
-                  outlined
-                  v-model="form.sNwkSIntKey"
-                  @input="$v.form.sNwkSIntKey.$touch()"
-                  @blur="$v.form.sNwkSIntKey.$touch()"
-                  :error-messages="sNwkSIntKeyErrors"
-                  required
-                  :counter="23"
-                  label="sNwkSIntKey*"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-                md="6"
-              >
-                <v-text-field
-                  outlined
-                  v-model="form.nwkSEncKey"
-                  @input="$v.form.nwkSEncKey.$touch()"
-                  @blur="$v.form.nwkSEncKey.$touch()"
-                  :error-messages="nwkSEncKeyErrors"
-                  :counter="23"
-                  required
-                  label="nwkSEncKey*"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col
-                cols="12"
-                md="6"
-              >
-                <v-text-field
-                  outlined
-                  v-model="form.appSKey"
-                  @input="$v.form.appSKey.$touch()"
-                  @blur="$v.form.appSKey.$touch()"
-                  :error-messages="appSKeyErrors"
-                  required
-                  :counter="23"
-                  label="appSKey*"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-                md="6"
-              >
-                <v-text-field
-                  outlined
-                  v-model="form.appEUI"
-                  @input="$v.form.appEUI.$touch()"
-                  @blur="$v.form.appEUI.$touch()"
-                  :error-messages="appEUIErrors"
-                  required
-                  :counter="23"
-                  label="appEUI*"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col
-                cols="12"
-                md="6"
-              >
-                <v-text-field
-                  outlined
-                  v-model="form.appKey"
-                  @input="$v.form.appKey.$touch()"
-                  @blur="$v.form.appKey.$touch()"
-                  :error-messages="appKeyErrors"
-                  required
-                  :counter="23"
-                  label="appKey*"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-                md="6"
-              >
-                <v-text-field
-                  outlined
-                  v-model="form.model"
-                  @input="$v.form.model.$touch()"
-                  @blur="$v.form.model.$touch()"
-                  :error-messages="modelErrors"
-                  required
-                  label="Model*"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col
-                cols="12"
-                md="3"
-              >
-                <v-checkbox
-                  v-model="form.frameCounterCheck"
-                  :error-messages="frameCounterCheckErrors"
-                  @change="$v.form.frameCounterCheck.$touch()"
-                  @blur="$v.form.frameCounterCheck.$touch()"
-                  label="Frame Counter"
-                  type="checkbox"
-                  required
-                ></v-checkbox>
-              </v-col>
-              <v-col
-                cols="12"
-                md="3"
-              >
-                <v-checkbox
-                  v-model="form.devAddrCheck"
-                  :error-messages="devAddrCheckErrors"
-                  @change="$v.form.devAddrCheck.$touch()"
-                  @blur="$v.form.devAddrCheck.$touch()"
-                  label="Dev Address"
-                  type="checkbox"
-                  required
-                ></v-checkbox>
-              </v-col>
-            </v-row>
-            <v-btn
-              color="primary"
-              class="mr-4"
-              type="submit"
-              @click.prevent="submit"
-            >
-              Добавить
-            </v-btn>
-            <v-btn @click="clear">
-              Очистить
-            </v-btn>
-            <div
-              class="mt-3"
-              :class="[{ 'red--text text--darken-4': deviceError }, { 'light-green--text text--darken-3': deviceSuccess }]"
-            >
-              {{ deviceResult }}
-            </div>
-          </v-container>
-        </v-form>
-      </v-card>
-    </v-col>
-  </v-row>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <v-select
+              v-model="form.serviceProfileID"
+              :items="serviceProfileIDList"
+              label="serviceProfileID*"
+            ></v-select>
+          </v-col>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <v-select
+              v-model="form.deviceProfileID"
+              :items="deviceProfileIDList"
+              label="deviceProfileID*"
+            ></v-select>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <v-text-field
+              v-model="form.nwkSKey"
+              @input="$v.form.nwkSKey.$touch()"
+              @blur="$v.form.nwkSKey.$touch()"
+              :error-messages="nwkSKeyErrors"
+              required
+              :counter="23"
+              label="nwkSKey*"
+            ></v-text-field>
+          </v-col>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <v-text-field
+              v-model="form.fNwkSIntKey"
+              @input="$v.form.fNwkSIntKey.$touch()"
+              @blur="$v.form.fNwkSIntKey.$touch()"
+              :error-messages="fNwkSIntKeyErrors"
+              required
+              :counter="23"
+              label="fNwkSIntKey*"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <v-text-field
+              v-model="form.sNwkSIntKey"
+              @input="$v.form.sNwkSIntKey.$touch()"
+              @blur="$v.form.sNwkSIntKey.$touch()"
+              :error-messages="sNwkSIntKeyErrors"
+              required
+              :counter="23"
+              label="sNwkSIntKey*"
+            ></v-text-field>
+          </v-col>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <v-text-field
+              v-model="form.nwkSEncKey"
+              @input="$v.form.nwkSEncKey.$touch()"
+              @blur="$v.form.nwkSEncKey.$touch()"
+              :error-messages="nwkSEncKeyErrors"
+              :counter="23"
+              required
+              label="nwkSEncKey*"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <v-text-field
+              v-model="form.appSKey"
+              @input="$v.form.appSKey.$touch()"
+              @blur="$v.form.appSKey.$touch()"
+              :error-messages="appSKeyErrors"
+              required
+              :counter="23"
+              label="appSKey*"
+            ></v-text-field>
+          </v-col>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <v-text-field
+              v-model="form.appEUI"
+              @input="$v.form.appEUI.$touch()"
+              @blur="$v.form.appEUI.$touch()"
+              :error-messages="appEUIErrors"
+              required
+              :counter="23"
+              label="appEUI*"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <v-text-field
+              v-model="form.appKey"
+              @input="$v.form.appKey.$touch()"
+              @blur="$v.form.appKey.$touch()"
+              :error-messages="appKeyErrors"
+              required
+              :counter="23"
+              label="appKey*"
+            ></v-text-field>
+          </v-col>
+          <v-col
+            cols="12"
+            md="6"
+          >
+            <v-text-field
+              v-model="form.model"
+              @input="$v.form.model.$touch()"
+              @blur="$v.form.model.$touch()"
+              :error-messages="modelErrors"
+              required
+              label="Model*"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col
+            cols="12"
+            md="3"
+          >
+            <v-checkbox
+              v-model="form.frameCounterCheck"
+              :error-messages="frameCounterCheckErrors"
+              @change="$v.form.frameCounterCheck.$touch()"
+              @blur="$v.form.frameCounterCheck.$touch()"
+              label="Frame Counter"
+              type="checkbox"
+              required
+            ></v-checkbox>
+          </v-col>
+          <v-col
+            cols="12"
+            md="3"
+          >
+            <v-checkbox
+              v-model="form.devAddrCheck"
+              :error-messages="devAddrCheckErrors"
+              @change="$v.form.devAddrCheck.$touch()"
+              @blur="$v.form.devAddrCheck.$touch()"
+              label="Dev Address"
+              type="checkbox"
+              required
+            ></v-checkbox>
+          </v-col>
+        </v-row>
+        <v-btn
+          color="primary"
+          class="mr-4"
+          type="submit"
+          @click.prevent="submit"
+        >
+          Добавить
+        </v-btn>
+        <v-btn @click="clear">
+          Очистить
+        </v-btn>
+        <div
+          class="mt-3"
+          :class="[{ 'red--text text--darken-4': deviceError }, { 'light-green--text text--darken-3': deviceSuccess }]"
+        >
+          {{ deviceResult }}
+        </div>
+      </v-container>
+    </v-form>
+    </v-card>
+  </v-dialog>
+  </div>
 </template>
 
 <script>
@@ -346,6 +366,7 @@ export default {
   data() {
     return {
       addDeviceStatus: null,
+      addDeviceModal: false,
       form: {
         devEUI: '3739343561375A14',
         name: 'device_name',
@@ -372,6 +393,7 @@ export default {
       skip: 0,
       offset: 5,
       showFull: false,
+      showSearch: false,
     }
   },
   async fetch() {
@@ -528,22 +550,3 @@ export default {
   },
 }
 </script>
-<style lang="scss">
-.device {
-  &__card {
-    height: 400px;
-
-    &._full {
-      height: auto;
-    }
-  }
-
-  &__btns {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: #1e1e1e;
-  }
-}
-</style>
