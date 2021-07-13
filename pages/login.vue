@@ -1,7 +1,7 @@
 <template>
-  <v-row justify="center">
+  <v-row justify="center login-form">
     <v-col cols="12" sm="8" md="4">
-      <v-card outlined class="mb-6 pl-6 pr-6 pb-6">
+      <v-card class="mb-6 pl-6 pr-6 pb-6" elevation="12">
         <v-card-title>Авторизация</v-card-title>
           <v-form @submit.prevent="userLogin">
             <v-container>
@@ -17,7 +17,7 @@
               ></v-text-field>
               <v-btn
                 color="primary"
-                class="mr-4"
+                class="mr-4 mt-4 "
                 type="submit"
               >
                 Войти
@@ -56,6 +56,14 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
+$b: '.login-form';
 
+#{$b} {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 </style>

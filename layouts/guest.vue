@@ -4,6 +4,8 @@
       :clipped-left="clipped"
       fixed
       app
+      elevation="0"
+      color="grey lighten-3"
     >
       <v-toolbar-title v-text="title" />
       <v-spacer />

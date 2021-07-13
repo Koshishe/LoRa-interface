@@ -1,15 +1,15 @@
 <template>
   <div style="width: 100%;">
     <v-card elevation="0">
-      <v-card-title class="teal lighten-1">
+      <v-card-title class="cyan darken-1">
         <v-row>
           <v-col
             cols="12"
-            md="4"
+            md="3"
           >
             <span class="text-h5 white--text">Устройства</span>
           </v-col>
-          <v-col md="6">
+          <v-col md="7">
             <!-- найти устройство -->
             <v-expand-x-transition>
               <v-text-field
@@ -22,7 +22,7 @@
               />
             </v-expand-x-transition>
           </v-col>
-          <v-col md="1">
+          <v-col md="2" class="d-flex justify-end">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -36,8 +36,6 @@
               </template>
               <span>Поиск по устройсвам</span>
             </v-tooltip>
-          </v-col>
-          <v-col md="1">
             <v-tooltip bottom>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -328,9 +326,7 @@ import { mapState, mapActions } from "vuex";
 import { required, maxLength, integer } from 'vuelidate/lib/validators'
 
 export default {
-  auth: true,
   mixins: [validationMixin],
-  middleware: 'auth',
   validations: {
     form: {
       devAddr: {required},
