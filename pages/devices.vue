@@ -10,7 +10,7 @@
             <span class="text-h5 white--text">Устройства</span>
           </v-col>
           <v-col md="7">
-            <!-- найти устройство -->
+            <!-- todo: make component найти устройство -->
             <v-expand-x-transition>
               <v-text-field
                 hide-details
