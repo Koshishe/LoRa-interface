@@ -52,7 +52,7 @@
           </v-col>
         </v-row>
       </v-card-title>
-      <!-- список устройтв -->
+      <!-- todo: add component список устройтв -->
       <div class="px-6 py-6" v-if="devices.length">
         <v-expansion-panels focusable>
           <v-expansion-panel
