@@ -76,7 +76,7 @@
     v-model="addDeviceModal"
     width="600"
   >
-  <!-- Форма добавления -->
+  <!-- todo: new components Форма добавления -->
     <v-card>
       <v-card-title class="text-h5">Добавить устройство</v-card-title>
       <v-form>
