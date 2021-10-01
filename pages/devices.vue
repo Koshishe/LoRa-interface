@@ -463,7 +463,7 @@ export default {
     modelErrors() {
       const errors = [];
       if (!this.$v.form.model.$dirty) return errors;
-      !this.$v.form.model.required && errors.push('This field is required.');
+      (!this.$v.form.model.required && !this.$v.form.model.integer) && errors.push('This field is required.');
       return errors
     },
     frameCounterCheckErrors() {
@@ -536,7 +536,7 @@ export default {
       this.form.appEUI = '';
       this.form.appKey = '';
       this.form.nwkKey = '';
-      this.form.model = null;
+      this.form.model = 0;
       this.form.frameCounterCheck = '';
       this.form.devAddrCheck = '';
       this.deviceResult = '';
