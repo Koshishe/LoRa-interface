@@ -8,7 +8,8 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "json-server": "json-server --watch assets/data/json-server.json --port 3005"
+    "json-server": "json-server --watch assets/data/json-server.json --port 3005",
+    "deploy": "push-dir --dir=dist --branch=gh-pages --cleanup"
   },
   "dependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.12.1",
@@ -41,6 +42,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "@nuxtjs/vuetify": "^1.11.3"
+    "@nuxtjs/vuetify": "^1.11.3",
+    "push-dir": "^0.4.1"
   }
 }
