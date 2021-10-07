@@ -9,7 +9,6 @@
     "start": "nuxt start",
     "generate": "nuxt generate",
     "json-server": "json-server --watch assets/data/json-server.json --port 3005",
-    "deploy": "push-dir --dir=dist --branch=gh-pages --cleanup"
   },
   "dependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.12.1",
