@@ -1,5 +1,5 @@
 <template>
   <div>
-    <v-card-title>Добро пожаловать</v-card-title>
+    <v-card-title>Профиль</v-card-title>
   </div>
 </template>

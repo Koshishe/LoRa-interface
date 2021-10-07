@@ -14,7 +14,6 @@
             md="8"
             class="d-flex align-center"
           >
-              <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
               <v-toolbar-title v-text="title" />
           </v-col>
         </v-row>
@@ -77,7 +76,6 @@ export default {
     return {
       clipped: false,
       fixed: false,
-      drawer: (this.$vuetify.breakpoint.name !== 'sm' && this.$vuetify.breakpoint.name !== 'xs' && this.$vuetify.breakpoint.name !== 'md'),
       items: [
         {
           icon: 'mdi-account',
@@ -95,10 +93,10 @@ export default {
           to: '/gateways'
         },
         {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
-        }
+          icon: 'mdi-account-multiple',
+          title: 'Организации',
+          to: '/organizations'
+        },
       ],
       miniVariant: false,
       right: true,

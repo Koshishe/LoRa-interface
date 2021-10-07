@@ -1,29 +1,11 @@
 <template>
   <v-form class="pb-12 pt-6">
-    <v-row class="d-flex flex-wrap">
-      <v-col
-        v-for="(el, index) in form"
-       :key="index"
-        cols="12"
-        sm="8"
-        md="6"
-      >
-        <v-text-field
-          :value="el"
-          :label="index"
-          v-model="form[index]"
-          :disabled="(index === 'devEUI' || index === 'devAddrCheck' || index === 'frameCounterCheck') ? true : disabled"
-          width="50%"
-        ></v-text-field>
-      </v-col>
-    </v-row>
     <div class="py-4">
-      <v-btn color="primary" @click.prevent="changeDevice">{{ disabled ? 'Редактировать' : 'Готово'}}</v-btn>
-      <v-dialog
-        v-model="dialog"
-        persistent
-        max-width="290"
-      >
+      <v-btn color="primary" @click.prevent="changeDevice">
+        <v-icon v-if="disabled" color="white" class="pr-2">mdi-pencil-outline</v-icon>
+        {{ disabled ? 'Редактировать' : 'Готово'}}
+      </v-btn>
+      <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             class="ml-3"
@@ -31,10 +13,18 @@
             dark
             v-bind="attrs"
             v-on="on"
+            @click="dialog = !dialog"
           >
-            Удалить
+            <v-icon color="white">mdi-trash-can-outline</v-icon>
           </v-btn>
         </template>
+        <span>Удалить устройство</span>
+      </v-tooltip>
+      <v-dialog
+        v-model="dialog"
+        persistent
+        max-width="290"
+      >
         <v-card outlined>
           <v-card-title class="text-h5">
             Внимание!
@@ -59,6 +49,28 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+    </div>
+    <v-row class="d-flex flex-wrap">
+      <v-col
+        v-for="(el, index) in form"
+       :key="index"
+        cols="12"
+        sm="8"
+        md="6"
+      >
+        <v-text-field
+          :value="el"
+          :label="index"
+          v-model="form[index]"
+          :disabled="(index === 'devEUI' || index === 'devAddrCheck' || index === 'frameCounterCheck') ? true : disabled"
+          width="50%"
+        ></v-text-field>
+      </v-col>
+    </v-row>
+    <div class="py-4">
+      <v-btn v-if="!disabled" color="primary" @click.prevent="changeDevice">
+        Готово
+      </v-btn>
     </div>
   </v-form>
 </template>
