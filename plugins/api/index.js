@@ -9,6 +9,8 @@ export default ({ $axios }, inject) => {
     devices: apiDevices($axios, `${prefix}devices`),
     gateways: apiGateways($axios, `${prefix}gateways`),
     serviceProfiles: apiServicesProfile($axios, `${prefix}service_profiles`),
-    deviceProfiles: apiServicesProfile($axios, `${prefix}device_profiles`)
+    deviceProfiles: apiServicesProfile($axios, `${prefix}device_profiles`),
+    networkServers: apiServicesProfile($axios, `${prefix}/network_servers`),
+    organizations: apiServicesProfile($axios, `${prefix}/organizations`),
   });
 };

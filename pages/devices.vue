@@ -1,7 +1,7 @@
 <template>
   <div style="width: 100%;">
     <v-card elevation="0">
-      <v-card-title class="cyan darken-1">
+      <v-card-title class="cyan darken-2">
        <device-header @filer-devices="filteredDevices" />
       </v-card-title>
       <div class="px-6 py-6" v-if="devices.length">
@@ -14,7 +14,7 @@
             <v-expansion-panel-content
               class="overflow-y-auto"
             >
-                <DeviceItem :item="item"></DeviceItem>
+                <DeviceItem :item="item" />
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
@@ -48,8 +48,6 @@ export default {
   },
 
   async fetch() {
-    await this.getServiceProfileId();
-    await this.getDeviceProfileId();
     await this.getDevicesList({skip: 0, limit: 10});
   },
   computed: {
@@ -59,7 +57,6 @@ export default {
     },
   },
   methods: {
-    ...mapActions('service-profile', ['getServiceProfileId', 'getDeviceProfileId']),
     ...mapActions('devices', ['getDevicesList']),
     filteredDevices(value) {
       this.filterDevices = value;

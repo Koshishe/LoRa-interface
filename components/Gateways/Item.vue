@@ -18,7 +18,7 @@
             <v-icon color="white">mdi-trash-can-outline</v-icon>
           </v-btn>
         </template>
-        <span>Удалить устройство</span>
+        <span>Удалить базовую станцию</span>
       </v-tooltip>
       <v-dialog
         v-model="dialog"
@@ -29,7 +29,7 @@
           <v-card-title class="text-h5">
             Внимание!
           </v-card-title>
-          <v-card-text>{{ `Вы собираетесь удалить устройство "${form.name}". После удаления отменить данное действие будет невозможно.` }}</v-card-text>
+          <v-card-text>{{ `Вы собираетесь удалить базовую станцию "${form.name}". После удаления отменить данное действие будет невозможно.` }}</v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
@@ -62,7 +62,7 @@
           :value="el"
           :label="index"
           v-model="form[index]"
-          :disabled="(index === 'devEUI' || index === 'devAddrCheck' || index === 'frameCounterCheck') ? true : disabled"
+          :disabled="(index === 'id') ? true : disabled"
           width="50%"
         ></v-text-field>
       </v-col>
@@ -92,23 +92,11 @@ export default {
       disabled: true,
       answer: '',
       form: {
-        devEUI: this.item.devEUI,
-        name: this.item.name,
-        description: this.item.description,
-        serviceProfileID: this.item.serviceProfileID,
-        deviceProfileID: this.item.deviceProfileID,
-        devAddr: this.item.devAddr,
-        nwkSKey: this.item.nwkSKey,
-        fNwkSIntKey: this.item.fNwkSIntKey,
-        sNwkSIntKey: this.item.sNwkSIntKey,
-        nwkSEncKey: this.item.nwkSEncKey,
-        appSKey: this.item.appSKey,
-        appEUI: this.item.appEUI,
-        appKey: this.item.appKey,
-        nwkKey: this.item.nwkKey,
-        model: this.item.model,
-        frameCounterCheck: this.item.frameCounterCheck,
-        devAddrCheck: this.item.devAddrCheck,
+          id: this.item.id,
+          name: this.item.name,
+          description: this.item.description,
+          networkServerID: this.item.networkServerID,
+          organizationID: this.item.organizationID,
       },
       dialog: false,
     }

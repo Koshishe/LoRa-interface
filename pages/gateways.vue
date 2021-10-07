@@ -1,7 +1,7 @@
 <template>
   <div style="width: 100%;">
     <v-card elevation="0">
-      <v-card-title class="teal darken-1">
+      <v-card-title class="cyan darken-3">
         <gateway-header @filer-gateways="filteredGateways" />
       </v-card-title>
       <div class="px-6 py-6" v-if="gateways.length">
@@ -14,7 +14,7 @@
             <v-expansion-panel-content
               class="overflow-y-auto"
             >
-              <DeviceItem :item="item"></DeviceItem>
+              <GatewayItem :item="item" />
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
@@ -28,12 +28,12 @@
 
 <script>
   import GatewayHeader from '~/components/Gateways/Header.vue';
-  import DeviceItem from '~/components/Devices/Item.vue';
+  import GatewayItem from '~/components/Gateways/Item.vue';
   import { mapState, mapActions } from "vuex";
 
   export default {
     components: {
-      DeviceItem,
+      GatewayItem,
       GatewayHeader,
     },
     data() {

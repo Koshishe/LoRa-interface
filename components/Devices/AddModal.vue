@@ -386,6 +386,7 @@ export default {
   },
   methods: {
     ...mapActions('devices', ['getDevicesList']),
+    ...mapActions('service-profile', ['getServiceProfileId', 'getDeviceProfileId']),
     submit () {
       this.$v.$touch();
       if (!this.$v.$invalid) {

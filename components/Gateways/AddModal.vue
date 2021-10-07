@@ -27,21 +27,15 @@
           :counter="16"
           required
         />
-        <v-text-field
+        <v-select
           v-model="form.networkServerID"
-          @input="$v.form.networkServerID.$touch()"
-          @blur="$v.form.networkServerID.$touch()"
-          :error-messages="networkServerIDErrors"
+          :items="networkServersIDList"
           label="networkServerID*"
-          required
         />
-        <v-text-field
+        <v-select
           v-model="form.organizationID"
-          @input="$v.form.organizationID.$touch()"
-          @blur="$v.form.organizationID.$touch()"
-          :error-messages="organizationIDErrors"
+          :items="organizationsIDList"
           label="organizationID*"
-          required
         />
         <v-btn
           color="primary"
@@ -81,8 +75,12 @@ export default {
       organizationID: {required},
     },
   },
+  async fetch() {
+  await this.getNetworkServersId();
+  await this.getOrganizationsId();
+  },
   computed: {
-    ...mapState('service-profile', ['serviceProfileIDList', 'deviceProfileIDList']),
+    ...mapState('service-profile', ['organizationsIDList', 'networkServersIDList']),
 
     idErrors() {
       const errors = [];
@@ -105,7 +103,7 @@ export default {
       return errors
     },
 
-      organizationIDErrors() {
+    organizationIDErrors() {
       const errors = [];
       if (!this.$v.form.organizationID.$dirty) return errors;
       !this.$v.form.organizationID.required && errors.push('Поле обязательно к заполнению');
@@ -121,13 +119,14 @@ export default {
         id: '4739343561375A14',
         name: 'gateway name',
         description: 'some description',
-        networkServerID: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-        organizationID: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
+        networkServerID: '',
+        organizationID: '',
       },
     };
   },
   methods: {
     ...mapActions('gateways', ['getGatewaysList']),
+    ...mapActions('service-profile', ['getNetworkServersId', 'getOrganizationsId']),
     submit () {
       this.$v.$touch();
       if (!this.$v.$invalid) {

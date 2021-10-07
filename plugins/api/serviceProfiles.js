@@ -9,4 +9,14 @@ export default ($axios, tag) => ({
       params,
     });
   },
+  getNetworkServersList(params) {
+    return $axios.get(tag, {
+      params,
+    });
+  },
+  getOrganizationsList(params) {
+    return $axios.get(tag, {
+      params,
+    });
+  },
 });
