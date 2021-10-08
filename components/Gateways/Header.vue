@@ -52,7 +52,7 @@
       v-model="addGatewayModal"
       width="600"
     >
-      <gateway-add-modal @close-device-model="successAdded" />
+      <gateway-add-modal @close-device-model="closeModal" />
     </v-dialog>
     <v-dialog
       v-model="successGatewayModal"
@@ -87,10 +87,12 @@ export default {
     };
   },
   methods: {
-    successAdded(message) {
+    closeModal(message) {
       this.addGatewayModal = false;
-      this.successGatewayModal = true;
-      this.modalMessage = message;
+      if (message) {
+        this.successGatewayModal = true;
+        this.modalMessage = message;
+      }
     },
     closeSuccess() {
       this.successGatewayModal = false;

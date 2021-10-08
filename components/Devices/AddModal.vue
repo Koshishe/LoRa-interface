@@ -227,8 +227,8 @@
         >
           Добавить
         </v-btn>
-        <v-btn @click="clear">
-          Очистить
+        <v-btn @click="$emit('close-device-model')">
+          Отмена
         </v-btn>
         <div
           class="mt-3"

@@ -8,7 +8,7 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "json-server": "json-server --watch assets/data/json-server.json --port 3005",
+    "json-server": "json-server --watch assets/data/json-server.json --port 3005"
   },
   "dependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.12.1",

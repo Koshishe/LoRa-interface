@@ -102,13 +102,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions('devices', ['getDevicesList']),
+    ...mapActions('gateways', ['getGatewaysList']),
     changeDevice() {
       if (!this.disabled) {
-        localStorage.setItem('dev_id', this.form.devEUI);
-        this.$api.devices.changeDevice(this.form)
+        localStorage.setItem('gat_id', this.form.id);
+        this.$api.gateways.changeGateway(this.form)
           .then((result) => {
-            this.getDevicesList({skip: 0, limit: 10});
+            this.getGatewaysList({skip: 0, limit: 10});
             this.answer = result;
           })
           .catch((result) => {
@@ -118,10 +118,10 @@ export default {
        this.disabled = !this.disabled;
     },
     deleteItem() {
-      localStorage.setItem('dev_id', this.form.devEUI);
-        this.$api.devices.deleteDevice()
+      localStorage.setItem('gat_id', this.form.id);
+        this.$api.devices.deleteGateway()
           .then((result) => {
-            this.getDevicesList({skip: 0, limit: 10});
+            this.getGatewaysList({skip: 0, limit: 10});
             this.answer = result;
           })
           .catch((result) => {

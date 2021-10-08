@@ -53,7 +53,7 @@
       v-model="addDeviceModal"
       width="600"
     >
-      <device-add-modal @close-device-model="successAdded" />
+      <device-add-modal @close-device-model="closeModal" />
     </v-dialog>
     <v-dialog
       v-model="successDeviceModal"
@@ -88,10 +88,13 @@ export default {
     };
   },
   methods: {
-    successAdded(message) {
+    closeModal(message) {
       this.addDeviceModal = false;
-      this.successDeviceModal = true;
-      this.modalMessage = message;
+
+      if (message) {
+          this.successDeviceModal = true;
+          this.modalMessage = message;
+      }
     },
     closeSuccess() {
       this.successDeviceModal = false;
